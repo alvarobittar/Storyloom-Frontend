@@ -1,5 +1,4 @@
-import { StyleSheet, View, Pressable, Text } from 'react-native';
-
+import { StyleSheet, View, Pressable, Text } from 'react-native'; // Asegúrate de que esta ruta sea correcta
 export default function Button({ label }) {
   return (
     <View style={styles.buttonContainer}>
@@ -23,8 +22,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     height: '100%',
-    alignItems: 'upper', 
-    justifyContent: 'upper',
+    alignItems: 'center', // Cambiado a un valor válido
+    justifyContent: 'center', // Cambiado a un valor válido
     flexDirection: 'row',
   },
   buttonLabel: {
