@@ -1,10 +1,18 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
-import WelcomeScreen from "./screens/WelcomeScreen";
-import Home from "./screens/Home";
+// App.js
+import React from 'react';
+import { WatchListProvider } from './components/WatchListContext';
 import MainScreen from './screens/MainScreen';
-
+import { AuthProvider } from './context/AuthContext';
 
 export default function App() {
-  return <MainScreen />;
+  return (
+    <AuthProvider>
+    <WatchListProvider>
+      <MainScreen />
+    </WatchListProvider>
+    </AuthProvider>
+
+  );
 }
+ 
+   

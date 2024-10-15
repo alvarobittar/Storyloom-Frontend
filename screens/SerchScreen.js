@@ -1,26 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { searchMovies } from '../Api'; // Importa la función desde api.js
 
-export default function SerchScreen() {
+export default function SearchScreen() {
   const [query, setQuery] = useState('');
   const [movies, setMovies] = useState([]);
   const navigation = useNavigation();
 
-  const searchMovies = async (text) => {
+  const handleSearch = async (text) => {
     setQuery(text);
     if (text.length > 2) {
       try {
-        const response = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
-          params: {
-            api_key: '24e5da12e0119037a26a11a43398e94a',
-            query: text,
-          },
-        });
-        setMovies(response.data.results);
+        const results = await searchMovies(text); // Llama a la función de api.js
+        setMovies(results);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching search movies:', error);
       }
     } else {
       setMovies([]);
@@ -41,10 +36,10 @@ export default function SerchScreen() {
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Buscar películas..."
+          placeholder="Seacrh..."
           placeholderTextColor="gray"
           value={query}
-          onChangeText={searchMovies}
+          onChangeText={handleSearch}
         />
         {query.length > 0 && (
           <TouchableOpacity onPress={clearSearch} style={styles.clearButton}>

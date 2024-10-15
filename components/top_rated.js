@@ -1,27 +1,26 @@
-// PopularMovies.js
 import { View, Text, Dimensions, Image, StyleSheet, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fetchPopularMovies } from '../Api'; // Importa la función desde api.js
+import { fetchTopRatedMovies } from '../Api'; // Importa la función desde api.js
 
 const { width, height } = Dimensions.get('window');
 
-export default function PopularMovies() {
+export default function TopRatedMovies() {
   const [movies, setMovies] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
-    const loadPopularMovies = async () => {
+    const loadTopRatedMovies = async () => {
       try {
-        const popularMovies = await fetchPopularMovies();
-        setMovies(popularMovies);
+        const TopRatedMovies = await fetchTopRatedMovies();
+        setMovies(TopRatedMovies);
       } catch (error) {
-        console.error('Error loading popular movies:', error);
+        console.error('Error loading Top Rated movies:', error);
       }
     };
 
-    loadPopularMovies();
+    loadTopRatedMovies();
   }, []);
 
   const handlePress = (movie) => {
@@ -30,7 +29,7 @@ export default function PopularMovies() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Popular:</Text>
+      <Text style={styles.text}>Top Rated:</Text>
       <FlatList
         data={movies}
         horizontal
@@ -51,11 +50,13 @@ export default function PopularMovies() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 10, // Ajusta este valor para subirlo más
-    padding: 10,
-  },
-  text: {
+  
+    container: {
+        marginBottom: 0, // Ajusta según sea necesario
+        padding: 10,
+    },
+
+    text: {
     color: 'yellow',
     fontSize: 20,
     fontWeight: 'bold',

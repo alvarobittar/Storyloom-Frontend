@@ -2,6 +2,7 @@ import { View, Text, Dimensions, Image, StyleSheet, FlatList } from 'react-nativ
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { fetchTrendingMovies } from '../Api'; // Importa la función desde api.js
 
 const { width, height } = Dimensions.get('window');
 
@@ -10,18 +11,16 @@ export default function TrendingMovies() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNGU1ZGExMmUwMTE5MDM3YTI2YTExYTQzMzk4ZTk0YSIsIm5iZiI6MTcyNTc1MDQzMi4xNjg2MTUsInN1YiI6IjY2ZGNiYjI5M2M1NThiNWU2YWVlMmIxYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ._vN8AzKKQr7yWxku4aRzr0p-pLFGT6cfM5twD07u_jg'
+    const TrendingMovies = async () => {
+      try {
+        const trendingMovies = await fetchTrendingMovies();
+        setMovies(trendingMovies);
+      } catch (error) {
+        console.error('Error loading trending movies:', error);
       }
     };
 
-    fetch('https://api.themoviedb.org/3/trending/movie/day?language=en-US', options)
-      .then(response => response.json())
-      .then(data => setMovies(data.results))
-      .catch(err => console.error(err));
+    TrendingMovies();
   }, []);
 
   const handlePress = (movie) => {
@@ -41,7 +40,8 @@ export default function TrendingMovies() {
             </View>
           </TouchableWithoutFeedback>
         )}
-        keyExtractor={(item) => item.id.toString()} contentContainerStyle={styles.listContainer}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
@@ -49,7 +49,7 @@ export default function TrendingMovies() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
+    marginBottom: 10, // Mantén este margen
     paddingHorizontal: 10,
   },
   text: {

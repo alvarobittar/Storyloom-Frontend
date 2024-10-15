@@ -1,13 +1,52 @@
-import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native'; // Asegúrate de que esta ruta sea correcta
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { registerUser } from '../Api'; // Asegúrate de que esta ruta sea correcta
+
 export default function Register() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegisterClick = async () => {
+    try {
+      const response = await registerUser(username, email, password);
+      // Maneja la respuesta aquí (por ejemplo, muestra un mensaje de éxito o redirige al usuario)
+      if (response.status === 200) {
+        Alert.alert('Registro exitoso', '¡Usuario registrado con éxito!');
+      }
+    } catch (error) {
+      // Maneja el error aquí (por ejemplo, muestra un mensaje de error)
+      Alert.alert('Error', 'No se pudo registrar el usuario. Inténtalo de nuevo.');
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registro</Text>
-      <TextInput style={styles.input} placeholder="Nombre de usuario" placeholderTextColor="gray" />
-      <TextInput style={styles.input} placeholder="Correo electrónico" keyboardType="email-address" placeholderTextColor="gray"  />
-      <TextInput style={styles.input} placeholder="Contraseña" secureTextEntry placeholderTextColor="gray"/>
-      <Button title="Registrarse" onPress={() => {}} />
+      <Text style={styles.title}>Register</Text>
+      <TextInput 
+        style={styles.input} 
+        placeholder="Username" 
+        placeholderTextColor="gray" 
+        value={username} 
+        onChangeText={setUsername} 
+      />
+      <TextInput 
+        style={styles.input} 
+        placeholder="Email" 
+        keyboardType="email-address" 
+        placeholderTextColor="gray" 
+        value={email} 
+        onChangeText={setEmail} 
+      />
+      <TextInput 
+        style={styles.input} 
+        placeholder="Password" 
+        secureTextEntry 
+        placeholderTextColor="gray" 
+        value={password} 
+        onChangeText={setPassword} 
+      />
+      <Button title="Register" onPress={handleRegisterClick} style={styles.Button}/>
     </View>
   );
 }
@@ -20,12 +59,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     marginBottom: 150,
-    width: "100%",
-    height: "100%",
-    
+    width: '100%',
+    height: '100%',
   },
   title: {
-
     color: 'white',
     fontSize: 24,
     marginBottom: 16,
@@ -40,5 +77,9 @@ const styles = StyleSheet.create({
     color: 'white',
     width: '80%',
     textAlign: 'center',
+  },
+  Button: {
+    backgroundColor: '#9370DB',
+    width: '80%',
   },
 });

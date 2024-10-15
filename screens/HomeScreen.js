@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import TrendingMovies from '../components/trendingmovies';
 import PopularMovies from '../components/popularmovies';
+import TopRatedMovies from '../components/top_rated';
 
 export default function HomeScreen() {
   return (
@@ -9,6 +10,7 @@ export default function HomeScreen() {
       <View style={styles.container}>
         <TrendingMovies/>
         <PopularMovies/>
+        <TopRatedMovies/>
       </View>
     </ScrollView>
   );
@@ -20,16 +22,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a',
   },
   contentContainer: {
-    paddingVertical: 0,
+    paddingTop: 25, // Ajusta este valor según sea necesario
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 350,
-  },
-  text: {
-    fontSize: 24,
-    color: 'white',
+     // Alinea desde arriba
+    
+    paddingVertical: 0, // Elimina el padding vertical
   },
 });
