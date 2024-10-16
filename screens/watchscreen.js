@@ -1,14 +1,21 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { WatchListContext } from '../components/WatchListContext';
 
 export default function WatchScreen() {
   const { watchList, seenList } = useContext(WatchListContext); // 'seenList' para las películas ya vistas
   const [showWatchList, setShowWatchList] = useState(true); // Controla qué lista mostrar
+  const navigation = useNavigation(); // Hook para la navegación
 
   // Alternar entre las listas de "Por ver" y "Vistas"
   const handleToggleList = () => {
     setShowWatchList(!showWatchList);
+  };
+
+  // Función para manejar la navegación a la pantalla de detalles de la película
+  const handlePress = (movie) => {
+    navigation.navigate('MovieScreen', { movieId: movie.id });
   };
 
   // Función para renderizar una lista de películas
@@ -18,9 +25,12 @@ export default function WatchScreen() {
       keyExtractor={(item) => item.id.toString()}
       numColumns={4}
       renderItem={({ item }) => (
-        <View style={styles.imageContainer}>
-          <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={styles.image} />
-        </View>
+        // Hacer que cada película sea presionable
+        <TouchableWithoutFeedback onPress={() => handlePress(item)}>
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={styles.image} />
+          </View>
+        </TouchableWithoutFeedback>
       )}
     />
   );
@@ -42,7 +52,7 @@ export default function WatchScreen() {
           <Text style={styles.buttonText}>View</Text>
         </TouchableOpacity>
       </View>
-      {/* Mostrar la lista correspondiente */}
+      {/* Renderizar la lista de películas según el estado */}
       {showWatchList ? renderMovieList(watchList) : renderMovieList(seenList)}
     </View>
   );

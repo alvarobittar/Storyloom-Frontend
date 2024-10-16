@@ -4,18 +4,36 @@ export const WatchListContext = createContext();
 
 export const WatchListProvider = ({ children }) => {
   const [watchList, setWatchList] = useState([]);
-  const [seenList, setSeenList] = useState([]); // Lista de películas vistas
+  const [seenList, setSeenList] = useState([]);
 
   const addToWatchList = (movie) => {
-    setWatchList((prevList) => [...prevList, movie]);
+    setWatchList((prevList) => {
+      if (!prevList.some(item => item.id === movie.id)) {
+        return [...prevList, movie];
+      }
+      return prevList;
+    });
   };
 
   const addToSeenList = (movie) => {
-    setSeenList((prevList) => [...prevList, movie]); // Función para agregar a la lista de películas vistas
+    setSeenList((prevList) => {
+      if (!prevList.some(item => item.id === movie.id)) {
+        return [...prevList, movie];
+      }
+      return prevList;
+    });
+  };
+
+  const removeFromWatchList = (movie) => {
+    setWatchList((prevList) => prevList.filter(item => item.id !== movie.id));
+  };
+
+  const removeFromSeenList = (movie) => {
+    setSeenList((prevList) => prevList.filter(item => item.id !== movie.id));
   };
 
   return (
-    <WatchListContext.Provider value={{ watchList, seenList, addToWatchList, addToSeenList }}>
+    <WatchListContext.Provider value={{ watchList, seenList, addToWatchList, addToSeenList, removeFromWatchList, removeFromSeenList }}>
       {children}
     </WatchListContext.Provider>
   );

@@ -7,7 +7,7 @@ export default function MovieScreen({ route }) {
   const { movieId } = route.params;
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { addToWatchList, addToSeenList } = useContext(WatchListContext);
+  const { addToWatchList, addToSeenList, removeFromWatchList, removeFromSeenList } = useContext(WatchListContext);
 
   useEffect(() => {
     const getMovieDetails = async () => {
@@ -39,18 +39,33 @@ export default function MovieScreen({ route }) {
     addToWatchList(movie);
   };
 
+
+  const handleRemoveFromWatchList = () => {
+    removeFromWatchList(movie);
+    removeFromSeenList(movie);
+  };
+
+
+
+
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <View style={styles.buttonContainer}>
       <TouchableOpacity style={styles.heartButton} onPress={handleAddToWatchList}>
         <Image source={require('../assets/images/favorite_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png')} style={styles.heartIcon} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.eyeButton} onPress={handleAddToSeenList}>
+      <TouchableOpacity style={styles.removeButton} onPress={handleRemoveFromWatchList}>
+        <Image source={require('../assets/images/disabled_by_default_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png')} style={styles.removeIcon} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.tickButton} onPress={handleAddToSeenList}>
         <Image source={require('../assets/images/dobletick.png')} style={styles.tickIcon} />
       </TouchableOpacity>
-      <Image source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }} style={styles.image} />
-      <Text style={styles.title}>{movie.title}</Text>
-      <Text style={styles.description}>{movie.overview}</Text>
-    </ScrollView>
+    </View>
+    <Image source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }} style={styles.image} />
+    <Text style={styles.title}>{movie.title}</Text>
+    <Text style={styles.description}>{movie.overview}</Text>
+  </ScrollView>
   );
 }
 
@@ -66,17 +81,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#1a1a1a',
   },
-  heartButton: {
-    position: 'absolute',
-    top: 10,
-    right: 20,
-    zIndex: 1,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
   },
-  eyeButton: {
-    position: 'relative',
-    top: 10,
-    right: 150,
-    zIndex: 1,
+  heartButton: {
+    marginRight: 100,
+  },
+  removeButton: {
+    marginHorizontal: 10,
+  },
+  tickButton: {
+    marginLeft: 100,
   },
   heartIcon: {
     width: 40,
@@ -85,8 +103,12 @@ const styles = StyleSheet.create({
   tickIcon: {
     width: 40,
     height: 40,
-    marginRight: 10,
   },
+  removeIcon: {
+    width: 40,
+    height: 40,
+  },
+
   image: {
     width: '100%',
     height: 300,

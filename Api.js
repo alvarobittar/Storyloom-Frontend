@@ -2,8 +2,8 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // URL base de la API
-const AUTHBASE_URL = 'http://10.51.2.18:8082/auth';
-const APIBASE_URL = 'http://10.51.2.18:8082/api/movies';
+const AUTHBASE_URL = 'http://192.168.100.24:8082/auth';
+const APIBASE_URL = 'http://192.168.100.24:8082/api/movies';
 
 
 // Función para iniciar sesión
