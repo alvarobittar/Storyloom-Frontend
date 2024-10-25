@@ -1,98 +1,98 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { WatchListContext } from '../components/WatchListContext';
+import { fetchWatchlist, fetchSeenMovies } from '../Api'; // Importar las funciones adecuadas
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import MovieList from '../components/MovieList';
 
 export default function WatchScreen() {
-  const { watchList, seenList } = useContext(WatchListContext); // 'seenList' para las películas ya vistas
-  const [showWatchList, setShowWatchList] = useState(true); // Controla qué lista mostrar
-  const navigation = useNavigation(); // Hook para la navegación
+    const [watchList, setWatchList] = useState([]);
+    const [seenList, setSeenList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [showingWatchlist, setShowingWatchlist] = useState(true);
 
-  // Alternar entre las listas de "Por ver" y "Vistas"
-  const handleToggleList = () => {
-    setShowWatchList(!showWatchList);
-  };
+    const navigation = useNavigation();
 
-  // Función para manejar la navegación a la pantalla de detalles de la película
-  const handlePress = (movie) => {
-    navigation.navigate('MovieScreen', { movieId: movie.id });
-  };
+    useEffect(() => {
+        const fetchMovieLists = async () => {
+            try {
+                setLoading(true);
+                const userId = await AsyncStorage.getItem('@user_Id'); // Obtener userId del almacenamiento
 
-  // Función para renderizar una lista de películas
-  const renderMovieList = (list) => (
-    <FlatList
-      data={list}
-      keyExtractor={(item) => item.id.toString()}
-      numColumns={4}
-      renderItem={({ item }) => (
-        // Hacer que cada película sea presionable
-        <TouchableWithoutFeedback onPress={() => handlePress(item)}>
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: `https://image.tmdb.org/t/p/w500${item.poster_path}` }} style={styles.image} />
-          </View>
-        </TouchableWithoutFeedback>
-      )}
-    />
-  );
+                // Obtener la lista de películas por ver
+                const watchListData = await fetchWatchlist(userId);
+                setWatchList(watchListData);
 
-  return (
-    <View style={styles.container}>
-      {/* Botones para alternar entre las listas */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, showWatchList ? styles.activeButton : styles.inactiveButton]}
-          onPress={() => setShowWatchList(true)}
-        >
-          <Text style={styles.buttonText}>For Viewing</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, !showWatchList ? styles.activeButton : styles.inactiveButton]}
-          onPress={() => setShowWatchList(false)}
-        >
-          <Text style={styles.buttonText}>View</Text>
-        </TouchableOpacity>
-      </View>
-      {/* Renderizar la lista de películas según el estado */}
-      {showWatchList ? renderMovieList(watchList) : renderMovieList(seenList)}
-    </View>
-  );
+                // Obtener la lista de películas vistas
+                const seenListData = await fetchSeenMovies(userId);
+                setSeenList(seenListData);
+            } catch (error) {
+                console.error('Error fetching movie lists:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMovieLists();
+    }, []);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#FFF" style={styles.loader} />;
+    }
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.buttonContainer}>
+                <TouchableWithoutFeedback onPress={() => setShowingWatchlist(true)}>
+                    <View style={showingWatchlist ? styles.selectedButton : styles.button}>
+                        <Text style={styles.buttonText}>Watchlist</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => setShowingWatchlist(false)}>
+                    <View style={!showingWatchlist ? styles.selectedButton : styles.button}>
+                        <Text style={styles.buttonText}>Seen</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </View>
+
+            {/* Pasamos la lista correcta a MovieList en función de showingWatchlist */}
+            <MovieList
+                navigation={navigation}
+                movies={showingWatchlist ? watchList : seenList}
+            />
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1a1a1a',
-    padding: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 10,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 55,
-    borderRadius: 5,
-    borderWidth: 2, 
-    borderColor: 'white', 
-  },
-  activeButton: {
-    backgroundColor: '#9370DB',
-  },
-  inactiveButton: {
-    backgroundColor: '#444',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  imageContainer: {
-    marginBottom: 10,
-  },
-  image: {
-    width: 95,
-    height: 150,
-    borderRadius: 10,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#121212',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginVertical: 10,
+    },
+    button: {
+        padding: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+        backgroundColor: '#333',
+    },
+    selectedButton: {
+        padding: 10,
+        marginHorizontal: 5,
+        borderRadius: 5,
+        backgroundColor: '#1a73e8',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    loader: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

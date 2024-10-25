@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 export default function WelcomeScreen({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.replace('Main');
+      navigation.replace('Register');
     }, 7000); // Navega a la pantalla principal después de 7 segundos
 
     return () => clearTimeout(timer);

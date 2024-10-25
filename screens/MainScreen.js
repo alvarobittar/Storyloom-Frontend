@@ -1,3 +1,4 @@
+import React from 'react';
 import { StyleSheet, Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -8,12 +9,14 @@ import RegisterScreen from './RegisterScreen';
 import WatchScreen from './watchscreen';
 import SearchScreen from './SerchScreen';
 import MovieScreen from './moviescreen';
+import AvatarScreen from './AvatarScreen.js'; // Mantén solo esta importación
 
 // Importa tus imágenes
 import homeIcon from '../assets/images/home_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24 (1).png'; 
 import searchIcon from '../assets/images/search_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'; 
 import watchIcon from '../assets/images/visibility_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'; 
 import userIcon from '../assets/images/account_circle_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png'; 
+import Login from '../components/login.js';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -48,7 +51,7 @@ function MainTabs() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen name="Watch" component={WatchScreen}/> 
-      <Tab.Screen name="User" component={RegisterScreen} />
+      <Tab.Screen name="User" component={AvatarScreen} />
     </Tab.Navigator>
   );
 }
@@ -63,10 +66,12 @@ export default function MainScreen() {
           headerStyle: styles.headerStyle, // Estilo del header
         }}>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ title: 'Welcome' }} />
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
         <Stack.Screen name="Main" component={MainTabs} options={{ title: 'STORYLOOM' }} />
         <Stack.Screen name="SearchScreen" component={SearchScreen}/>
         <Stack.Screen name="MovieScreen" component={MovieScreen}/>
         <Stack.Screen name="watchscreen" component={WatchScreen} />
+        <Stack.Screen name="Login" component={Login} options={{ title: 'Login' }} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,28 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Button, StyleSheet } from 'react-native';
 import Register from '../components/register';
 import Login from '../components/login';
 
 export default function RegisterScreen() {
-  const [showRegister, setShowRegister] = useState(true);
+  const [isRegister, setIsRegister] = useState(true);
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={[styles.button, showRegister ? styles.activeButton : styles.inactiveButton]}
-          onPress={() => setShowRegister(true)}
-        >
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, !showRegister ? styles.activeButton : styles.inactiveButton]}
-          onPress={() => setShowRegister(false)}
-        >
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+      {isRegister ? <Register /> : <Login />}
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchText}>
+          {isRegister ? '¿Ya tienes una cuenta?' : '¿No tienes una cuenta?'}
+        </Text>
+        <Button
+          title={isRegister ? 'Iniciar sesión' : 'Registrarse'} onPress={() => setIsRegister(!isRegister)} color="#9370DB"/>
       </View>
-      {showRegister ? <Register style={styles.register} /> : <Login style={styles.login} />}
     </View>
   );
 }
@@ -30,36 +23,16 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#1a1a1a',
-    padding: 10,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+  switchContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  switchText: {
+    color: 'white',
     marginBottom: 10,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 65,
-    borderRadius: 5,
-    borderWidth: 2, 
-    borderColor: 'white', 
-  },
-  activeButton: {
-    backgroundColor: '#9370DB',
-  },
-  inactiveButton: {
-    backgroundColor: '#444',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  register: {
-    // Estilos específicos para el componente Register
-  },
-  login: {
-    // Estilos específicos para el componente Login
   },
 });
