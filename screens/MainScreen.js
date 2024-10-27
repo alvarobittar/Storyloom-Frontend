@@ -5,11 +5,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import WelcomeScreen from './WelcomeScreen';
 import HomeScreen from './HomeScreen';
-import RegisterScreen from './RegisterScreen';
-import WatchScreen from './watchscreen';
+import AccountScreen from './AccountScreen.js';
+import WatchScreen from './WatchScreen.js';
 import SearchScreen from './SerchScreen';
-import MovieScreen from './moviescreen';
-import AvatarScreen from './AvatarScreen.js'; // Mantén solo esta importación
+import MovieScreen from './MovieScreen.js';
+import AvatarScreen from './AvatarScreen.js'; 
 
 // Importa tus imágenes
 import homeIcon from '../assets/images/home_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24 (1).png'; 
@@ -66,7 +66,7 @@ export default function MainScreen() {
           headerStyle: styles.headerStyle, // Estilo del header
         }}>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ title: 'Welcome' }} />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register' }} />
+        <Stack.Screen name="Register" component={AccountScreen} options={{ title: 'Register' }} />
         <Stack.Screen name="Main" component={MainTabs} options={{ title: 'STORYLOOM' }} />
         <Stack.Screen name="SearchScreen" component={SearchScreen}/>
         <Stack.Screen name="MovieScreen" component={MovieScreen}/>

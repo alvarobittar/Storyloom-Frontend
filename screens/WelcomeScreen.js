@@ -1,26 +1,42 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Image, StyleSheet, Animated, Easing, ActivityIndicator } from 'react-native';
 
 export default function WelcomeScreen({ navigation }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.replace('Register');
     }, 7000); // Navega a la pantalla principal después de 7 segundos
 
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(scaleAnim, {
+          toValue: 1.2,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, [navigation, scaleAnim]);
 
   return (
     <View style={styles.container}>
-      <Image 
-        source={require('../assets/images/Storyloom-logo.png')} 
-        style={styles.image} 
+      <Animated.Image 
+        source={require('../assets/images/StoryloomLogoV.png')} 
+        style={[styles.image, { transform: [{ scale: scaleAnim }] }]} 
+        resizeMode="contain" // Ajusta la imagen para que se contenga dentro del contenedor
       />
-      <Text style={styles.welcomeText}>LOADING...</Text>
-      <Image 
-        source={require('../assets/images/icons8-cargando.gif')} // Ruta al archivo GIF local
-        style={styles.loadingGif} 
-      />
+      <ActivityIndicator size="large" color="white" style={styles.loadingIndicator} />
     </View>
   );
 }
@@ -33,18 +49,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'black',
   },
-  welcomeText: {
-    color: 'white',
-    fontSize: 24,
-    marginBottom: 20,
-  },
   image: {
-    width: 200,
-    height: 150,
-    marginBottom: 20,
+    width: '80%', // Ajusta el ancho al 80% del contenedor
+    height: undefined, // Permite que la altura se ajuste automáticamente
+    aspectRatio: 1, // Mantiene la relación de aspecto de la imagen
+    marginBottom: 50,
   },
-  loadingGif: {
-    width: 50,
-    height: 50,
+  loadingIndicator: {
+    marginTop: 0,
   },
 });

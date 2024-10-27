@@ -1,72 +1,79 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fetchWatchlist, fetchSeenMovies } from '../Api'; // Importar las funciones adecuadas
+import { fetchWatchlist, fetchSeenMovies } from '../Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MovieList from '../components/MovieList';
+import MovieList from '../components/movielist';
 
 export default function WatchScreen() {
-    const [watchList, setWatchList] = useState([]);
     const [seenList, setSeenList] = useState([]);
+    const [watchList, setWatchList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [refreshing, setRefreshing] = useState(false);
     const [showingWatchlist, setShowingWatchlist] = useState(true);
 
     const navigation = useNavigation();
 
+    const fetchMovieLists = async () => {
+        try {
+            setLoading(true);
+            const userId = await AsyncStorage.getItem('@user_Id');
+
+            const watchListData = await fetchWatchlist(userId);
+            setWatchList(watchListData);
+
+            const seenListData = await fetchSeenMovies(userId);
+            setSeenList(seenListData);
+        } catch (error) {
+            console.error('Error fetching movie lists:', error);
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchMovieLists = async () => {
-            try {
-                setLoading(true);
-                const userId = await AsyncStorage.getItem('@user_Id'); // Obtener userId del almacenamiento
-
-                // Obtener la lista de películas por ver
-                const watchListData = await fetchWatchlist(userId);
-                setWatchList(watchListData);
-
-                // Obtener la lista de películas vistas
-                const seenListData = await fetchSeenMovies(userId);
-                setSeenList(seenListData);
-            } catch (error) {
-                console.error('Error fetching movie lists:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchMovieLists();
     }, []);
 
-    if (loading) {
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchMovieLists();
+    };
+
+    if (loading && !refreshing) {
         return <ActivityIndicator size="large" color="#FFF" style={styles.loader} />;
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.container}
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+        >
             <View style={styles.buttonContainer}>
-                <TouchableWithoutFeedback onPress={() => setShowingWatchlist(true)}>
-                    <View style={showingWatchlist ? styles.selectedButton : styles.button}>
-                        <Text style={styles.buttonText}>Watchlist</Text>
-                    </View>
-                </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={() => setShowingWatchlist(false)}>
-                    <View style={!showingWatchlist ? styles.selectedButton : styles.button}>
-                        <Text style={styles.buttonText}>Seen</Text>
-                    </View>
-                </TouchableWithoutFeedback>
+                <TouchableOpacity
+                    style={showingWatchlist ? styles.selectedButton : styles.button}
+                    onPress={() => setShowingWatchlist(true)}
+                >
+                    <Text style={styles.buttonText}>Watchlist</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={!showingWatchlist ? styles.selectedButton : styles.button}
+                    onPress={() => setShowingWatchlist(false)}
+                >
+                    <Text style={styles.buttonText}>Seen</Text>
+                </TouchableOpacity>
             </View>
-
-            {/* Pasamos la lista correcta a MovieList en función de showingWatchlist */}
-            <MovieList
-                navigation={navigation}
-                movies={showingWatchlist ? watchList : seenList}
-            />
-        </View>
+            <MovieList navigation={navigation} movies={showingWatchlist ? watchList : seenList} />
+        </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: '#121212',
     },
     buttonContainer: {

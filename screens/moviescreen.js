@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { fetchMovieDetails, addToWatchList, addToSeenList, removeFromWatchList } from '../Api';
+import { fetchMovieDetails, addToWatchList, addToSeenList, removeMovie } from '../Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MovieScreen({ route }) {
     const { movieId } = route.params;
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const getMovieDetails = async () => {
@@ -30,20 +31,23 @@ export default function MovieScreen({ route }) {
         );
     }
 
-// Crear el enlace a IMDb
 const imdbUrl = `https://www.imdb.com/title/${movie.imdb_id}`;
-// Crear el enlace al tráiler
 const trailerUrl = `https://www.youtube.com/watch?v=${movie.trailer}`;
 
-// Función para manejar la adición a la lista de 'por ver'
+
+
 const handleAddToWatchList = async () => {
-    try {
-        await addToWatchList(movieId);
-        Alert.alert("Success", `${movie.title} added to Watchlist`);
-    } catch (error) {
-        console.error('Error adding to Watchlist:', error);
-        Alert.alert("Error", "Could not add to Watchlist");
+  try {
+    const userId = await AsyncStorage.getItem('@user_Id'); // Corregido para usar la clave correcta
+    if (!userId) {
+        throw new Error('Usuario no encontrado');
     }
+    await addToWatchList(userId, movieId);
+    Alert.alert("Success", `${movie.title} marked as watchlist`);
+} catch (error) {
+    console.error('Error adding to watchlist :', error);
+    Alert.alert("Error", "Could not mark as Seen");
+}
 };
 
 const handleAddToSeenList = async () => {
@@ -60,17 +64,21 @@ const handleAddToSeenList = async () => {
   }
 };
 
-
-// Función para manejar la eliminación de la lista de 'por ver'
-const handleRemoveFromWatchList = async () => {
-    try {
-        await removeFromWatchList(movieId);
-        Alert.alert("Success", `${movie.title} removed from Watchlist`);
-    } catch (error) {
-        console.error('Error removing from Watchlist:', error);
-        Alert.alert("Error", "Could not remove from Watchlist");
-    }
+const handleRemoveMovie = async () => {
+  try {
+      const userId = await AsyncStorage.getItem('@user_Id');
+      if (!userId) {
+          Alert.alert('Error', 'Usuario no encontrado');
+          return;
+      }
+      await removeMovie(userId, movieId);
+      Alert.alert('Éxito', 'Película eliminada de ambas listas.');
+  } catch (error) {
+      console.error('Error al eliminar la película:', error);
+      Alert.alert('Error', 'No se pudo eliminar la película. Inténtalo de nuevo.');
+  }
 };
+
 
 return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -90,7 +98,7 @@ return (
                     <TouchableOpacity style={styles.heartButton} onPress={handleAddToWatchList}>
                         <Image source={require('../assets/images/favorite_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png')} style={styles.heartIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.removeButton} onPress={handleRemoveFromWatchList}>
+                    <TouchableOpacity style={styles.removeButton} onPress={handleRemoveMovie}>
                         <Image source={require('../assets/images/disabled_by_default_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png')} style={styles.removeIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.tickButton} onPress={handleAddToSeenList}>
@@ -191,13 +199,14 @@ const styles = StyleSheet.create({
   tickButton: {
     marginRight: 15,
   },
-  heartIcon: {
+  heartIcon: {        
     width: 40,
     height: 40,
   },
   tickIcon: {
     width: 40,
     height: 40,
+    
   },
   removeIcon: {
     width: 40,

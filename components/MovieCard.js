@@ -10,9 +10,11 @@ export default function MovieCard({ poster_path, title, overview }) {
                     style={styles.image}
                 />
             ) : (
-                <View style={[styles.image, styles.imagePlaceholder]}>
-                    <Text style={styles.noImageText}>Sin Imagen</Text>
+                <View style={[styles.image, styles.imagePlaceholder]}>{poster_path}
+                    <Text style={styles.noImageText}>No imagen</Text>
+                
                 </View>
+                   
             )}
             <View style={styles.info}>
                 {title ? (

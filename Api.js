@@ -112,14 +112,23 @@ export const searchMovies = async (query) => {
 export const addToWatchList = async (userId, movieId) => {
     try {
         const token = await AsyncStorage.getItem('@jwt_token');
+        if (!token) {
+            throw new Error('No se encontró el token de autenticación');
+        }
+
         const response = await axios.post(
-            `${APILIST_URL}/add?userId=${userId}&movieId=${movieId}&status=WATCHLIST`, // Usar la ruta correcta para agregar
-            {}, // Enviar el cuerpo vacío ya que los parámetros van en la URL
-            { headers: { Authorization: `Bearer ${token}` } }
+            `${APILIST_URL}/add?userId=${userId}&movieId=${movieId}&status=WATCHLIST`, 
+            {}, 
+            { 
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                } 
+            }
         );
         return response;
     } catch (error) {
-        console.error('Error adding to Watchlist:', error);
+        console.error('Error adding to Seen list:', error);
         throw error;
     }
 };
@@ -151,20 +160,25 @@ export const addToSeenList = async (userId, movieId) => {
 };
 
 
-// Función para eliminar una película de la watchlist
-export const removeFromWatchList = async (userId, movieId) => {
+// Función para eliminar una película
+export const removeMovie = async (userId, movieId) => {
     try {
         const token = await AsyncStorage.getItem('@jwt_token');
+        if (!token) {
+            throw new Error('Token no encontrado');
+        }
         const response = await axios.delete(
-            `${APILIST_URL}/user/${userId}'/remove?userId=${userId}&movieId=${movieId}`, // Usar la ruta correcta
+            `${APILIST_URL}/user/${userId}/remove?movieId=${movieId}`, // Ruta correcta
             { headers: { Authorization: `Bearer ${token}` } }
         );
-        return response;
+        return response; // Devuelve la respuesta para manejarla más adelante
     } catch (error) {
-        console.error('Error removing from Watchlist:', error);
-        throw error;
+        console.error('Error removing movie:', error);
+        throw error; // Propaga el error para manejo posterior
     }
 };
+
+
 
 // Función para obtener la watchlist por ID de usuario
 export const fetchWatchlist = async (userId) => {

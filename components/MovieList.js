@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, RefreshControl, Text } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
-import MovieCard from './MovieCard';
+import MovieCard from './moviecard';
 
 const MovieList = ({ navigation, movies }) => {
     return (
