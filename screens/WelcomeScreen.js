@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
   },
   image: {
-    width: '80%', // Ajusta el ancho al 80% del contenedor
-    height: undefined, // Permite que la altura se ajuste automáticamente
-    aspectRatio: 1, // Mantiene la relación de aspecto de la imagen
+    width: '80%', 
+    height: undefined, 
+    aspectRatio: 1, 
     marginBottom: 50,
   },
   loadingIndicator: {

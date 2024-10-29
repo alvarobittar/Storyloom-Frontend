@@ -22,12 +22,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a',
   },
   contentContainer: {
-    paddingTop: 25, // Ajusta este valor según sea necesario
+    paddingTop: 25, 
   },
   container: {
     flex: 1,
-     // Alinea desde arriba
-    
-    paddingVertical: 0, // Elimina el padding vertical
+    paddingVertical: 0, 
   },
 });

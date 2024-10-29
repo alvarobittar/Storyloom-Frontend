@@ -1,32 +1,29 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
-export default function MovieCard({ poster_path, title, overview }) {
+export default function MovieCard({ posterPath, title }) {
+   
     return (
         <View style={styles.movieItem}>
-            {poster_path ? (
+            {posterPath ? (
                 <Image
-                    source={{ uri: `https://image.tmdb.org/t/p/w500${poster_path}` }}
+                    source={{ uri: `https://image.tmdb.org/t/p/w500${posterPath}` }}
                     style={styles.image}
                 />
             ) : (
-                <View style={[styles.image, styles.imagePlaceholder]}>{poster_path}
+                <View style={[styles.image, styles.imagePlaceholder]}>
                     <Text style={styles.noImageText}>No imagen</Text>
-                
                 </View>
-                   
             )}
             <View style={styles.info}>
-                {title ? (
-                    <Text style={styles.title}>{title}</Text>
-                ) : (
-                    <Text style={styles.title}>Sin Título</Text>
-                )}
-                <Text style={styles.description}>{overview || "Sin descripción disponible"}</Text>
+                <Text style={styles.title}>{title || "Sin Título"}</Text>
+
             </View>
         </View>
     );
 }
+
+
 
 const styles = StyleSheet.create({
     movieItem: {

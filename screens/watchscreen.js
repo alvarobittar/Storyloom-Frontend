@@ -82,16 +82,22 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     button: {
-        padding: 10,
-        marginHorizontal: 5,
+        paddingVertical: 10, // Reducir el padding vertical
+        paddingHorizontal: 60, // Aumentar el padding horizontal
+        marginHorizontal: 10,
         borderRadius: 5,
         backgroundColor: '#333',
+        borderWidth: 2,
+        borderColor: '#fff',
     },
     selectedButton: {
-        padding: 10,
-        marginHorizontal: 5,
+        paddingVertical: 10, // Reducir el padding vertical
+        paddingHorizontal: 60, // Aumentar el padding horizontal
+        marginHorizontal: 10,
         borderRadius: 5,
-        backgroundColor: '#1a73e8',
+        backgroundColor: '#9370DB',
+        borderWidth: 2,
+        borderColor: '#fff',
     },
     buttonText: {
         color: 'white',

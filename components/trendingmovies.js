@@ -2,7 +2,7 @@ import { View, Text, Dimensions, Image, StyleSheet, FlatList } from 'react-nativ
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fetchTrendingMovies } from '../Api'; // Importa la función desde api.js
+import { fetchTrendingMovies } from '../Api'; 
 
 const { width, height } = Dimensions.get('window');
 
@@ -49,11 +49,11 @@ export default function TrendingMovies() {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 10, // Mantén este margen
+    marginBottom: 10, 
     paddingHorizontal: 10,
   },
   text: {
-    color: 'yellow',
+    color: 'white',
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,

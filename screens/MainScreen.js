@@ -25,14 +25,14 @@ function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarStyle: styles.tabBarStyle, // Estilo de la barra de pestañas
-        tabBarActiveTintColor: styles.tabBarActiveTintColor.color, // Color del texto activo en las pestañas
-        tabBarInactiveTintColor: styles.tabBarInactiveTintColor.color, // Color del texto inactivo en las pestañas
+        tabBarStyle: styles.tabBarStyle,
+        tabBarActiveTintColor: styles.tabBarActiveTintColor.color, 
+        tabBarInactiveTintColor: styles.tabBarInactiveTintColor.color, 
         headerShown: false, // Ocultar el header
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          // Asigna los iconos dependiendo de la ruta
+          
           if (route.name === 'Home') {
             iconName = homeIcon;
           } else if (route.name === 'Search') {
@@ -42,8 +42,6 @@ function MainTabs() {
           } else if (route.name === 'User') {
             iconName = userIcon;
           }
-
-          // Devuelve la imagen con el tamaño y color deseados
           return <Image source={iconName} style={{ width: size, height: size, tintColor: color }} />;
         },
       })}
@@ -62,8 +60,8 @@ export default function MainScreen() {
       <Stack.Navigator
         initialRouteName="Welcome"
         screenOptions={{
-          headerTitleStyle: styles.headerTitleStyle, // Estilo del título del header
-          headerStyle: styles.headerStyle, // Estilo del header
+          headerTitleStyle: styles.headerTitleStyle, 
+          headerStyle: styles.headerStyle,
         }}>
         <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ title: 'Welcome' }} />
         <Stack.Screen name="Register" component={AccountScreen} options={{ title: 'Register' }} />

@@ -3,7 +3,7 @@ import { View, Text, Dimensions, Image, StyleSheet, FlatList } from 'react-nativ
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fetchPopularMovies } from '../Api'; // Importa la función desde api.js
+import { fetchPopularMovies } from '../Api'; 
 
 const { width, height } = Dimensions.get('window');
 
@@ -52,11 +52,11 @@ export default function PopularMovies() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10, // Ajusta este valor para subirlo más
+    marginTop: 10, 
     padding: 10,
   },
   text: {
-    color: 'yellow',
+    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,  

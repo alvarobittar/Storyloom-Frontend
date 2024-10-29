@@ -2,7 +2,7 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-// URL base de la API
+// URL base de la API y de autenticación
 const AUTHBASE_URL = 'http://192.168.100.24:8082/auth';
 const APIBASE_URL = 'http://192.168.100.24:8082/api/movies';
 const APILIST_URL = 'http://192.168.100.24:8082/api/movielist';
@@ -17,23 +17,21 @@ export const handleLogin = async (username, password) => {
         });
 
         if (response.status === 200) {
-            // Guardar el token en el almacenamiento local
+           
             const token =  response.data.token; 
             await AsyncStorage.setItem('@jwt_token', token);
-            // Guardar el userId en el almacenamiento local
+            
             const userId = response.data.userId;
             await AsyncStorage.setItem('@user_Id', userId.toString());
         }
-        console.log('Response:', response.data);
         return response;
     } catch (error) {
         if (error.response && error.response.status === 401) {
             Alert.alert('Error', 'Credenciales incorrectas. Inténtalo de nuevo.');
         } else {
-            console.error('Error al iniciar sesión:', error);
             Alert.alert('Error', 'No se pudo iniciar sesión. Inténtalo de nuevo.');
         }
-        throw error; // Propaga el error para que login.js pueda manejarlo.
+        throw error; 
     }
 };
 
@@ -55,9 +53,8 @@ export const registerUser = async (username, email, password) => {
 export const fetchTrendingMovies = async () => {
     try {
         const response = await axios.get(`${APIBASE_URL}/trending`);
-        return response.data.results; // Retorna la lista de películas
+        return response.data.results; 
     } catch (error) {
-        console.error('Error fetching trending movies:', error);
         throw error;
     }
 };
@@ -66,9 +63,8 @@ export const fetchTrendingMovies = async () => {
 export const fetchPopularMovies = async () => {
     try {
         const response = await axios.get(`${APIBASE_URL}/popular`);
-        return response.data.results; // Retorna la lista de películas populares
+        return response.data.results; 
     } catch (error) {
-        console.error('Error fetching popular movies:', error);
         throw error;
     }
 };
@@ -77,9 +73,8 @@ export const fetchPopularMovies = async () => {
 export const fetchTopRatedMovies = async () => {
     try {
         const response = await axios.get(`${APIBASE_URL}/top_rated`);
-        return response.data.results; // Retorna la lista de películas mejores rankeadas
+        return response.data.results; 
     } catch (error) {
-        console.error('Error fetching Top Rated Movies movies:', error);
         throw error;
     }
 
@@ -91,7 +86,6 @@ export const fetchMovieDetails = async (movieId) => {
         const response = await axios.get(`${APIBASE_URL}/screen/${movieId}`);
         return response.data;
     } catch (error) {
-        console.error('Error fetching movie details:', error);
         throw error;
     }
 };
@@ -102,7 +96,6 @@ export const searchMovies = async (query) => {
         const response = await axios.get(`${APIBASE_URL}/search/${query}`);
         return response.data.results; // Retorna la lista de películas que coinciden con la búsqueda
     } catch (error) {
-        console.error('Error fetching search movies:', error);
         throw error;
     }
 };
@@ -116,9 +109,9 @@ export const addToWatchList = async (userId, movieId) => {
             throw new Error('No se encontró el token de autenticación');
         }
 
-        const response = await axios.post(
-            `${APILIST_URL}/add?userId=${userId}&movieId=${movieId}&status=WATCHLIST`, 
-            {}, 
+        const response = await axios.post(`${APILIST_URL}/add?userId=${userId}&movieId=${movieId}&status=WATCHLIST`, {
+
+        }, 
             { 
                 headers: { 
                     Authorization: `Bearer ${token}`,
@@ -128,7 +121,6 @@ export const addToWatchList = async (userId, movieId) => {
         );
         return response;
     } catch (error) {
-        console.error('Error adding to Seen list:', error);
         throw error;
     }
 };
@@ -142,9 +134,9 @@ export const addToSeenList = async (userId, movieId) => {
             throw new Error('No se encontró el token de autenticación');
         }
 
-        const response = await axios.post(
-            `${APILIST_URL}/add?userId=${userId}&movieId=${movieId}&status=SEEN`, 
-            {}, 
+        const response = await axios.post(`${APILIST_URL}/add?userId=${userId}&movieId=${movieId}&status=SEEN`, {
+
+        }, 
             { 
                 headers: { 
                     Authorization: `Bearer ${token}`,
@@ -154,7 +146,6 @@ export const addToSeenList = async (userId, movieId) => {
         );
         return response;
     } catch (error) {
-        console.error('Error adding to Seen list:', error);
         throw error;
     }
 };
@@ -167,14 +158,12 @@ export const removeMovie = async (userId, movieId) => {
         if (!token) {
             throw new Error('Token no encontrado');
         }
-        const response = await axios.delete(
-            `${APILIST_URL}/user/${userId}/remove?movieId=${movieId}`, // Ruta correcta
-            { headers: { Authorization: `Bearer ${token}` } }
+        const response = await axios.delete(`${APILIST_URL}/user/${userId}/remove?movieId=${movieId}`, { 
+            headers: { Authorization: `Bearer ${token}` } }
         );
-        return response; // Devuelve la respuesta para manejarla más adelante
+        return response; 
     } catch (error) {
-        console.error('Error removing movie:', error);
-        throw error; // Propaga el error para manejo posterior
+        throw error; 
     }
 };
 
@@ -184,13 +173,11 @@ export const removeMovie = async (userId, movieId) => {
 export const fetchWatchlist = async (userId) => {
     try {
         const token = await AsyncStorage.getItem('@jwt_token');
-        const response = await axios.get(
-            `${APILIST_URL}/user/${userId}/watchlist`, // Ruta correcta para obtener la watchlist
-            { headers: { Authorization: `Bearer ${token}` } }
+        const response = await axios.get(`${APILIST_URL}/user/${userId}/watchlist`, { 
+            headers: { Authorization: `Bearer ${token}` } }
         );
         return response.data;
     } catch (error) {
-        console.error('Error fetching watchlist:', error);
         throw error;
     }
 };
@@ -199,13 +186,11 @@ export const fetchWatchlist = async (userId) => {
 export const fetchSeenMovies = async (userId) => {
     try {
         const token = await AsyncStorage.getItem('@jwt_token');
-        const response = await axios.get(
-            `${APILIST_URL}/user/${userId}/seen`, // Ruta correcta para obtener películas vistas
-            { headers: { Authorization: `Bearer ${token}` } }
+        const response = await axios.get(`${APILIST_URL}/user/${userId}/seen`, {
+             headers: { Authorization: `Bearer ${token}` } }
         );
         return response.data;
     } catch (error) {
-        console.error('Error fetching seen movies:', error);
         throw error;
     }
 };

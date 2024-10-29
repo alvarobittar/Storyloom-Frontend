@@ -27,9 +27,9 @@ export default function AvatarScreen() {
   }, []);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('username'); // Elimina el nombre de usuario almacenado
-    await AsyncStorage.removeItem('selectedImage'); // Elimina la imagen seleccionada almacenada
-    navigation.replace('Login'); // Navega a la pantalla de inicio de sesión
+    await AsyncStorage.removeItem('username');
+    await AsyncStorage.removeItem('selectedImage'); 
+    navigation.replace('Login'); 
   };
 
   const handleImageSelect = async (image) => {

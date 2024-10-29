@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { handleLogin } from '../Api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { handleLogin } from "../Api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
   const onLoginPress = async () => {
@@ -14,13 +14,14 @@ export default function Login() {
       Alert.alert("Error", "Please fill in both username and password");
       return;
     }
-  
+
     try {
       const result = await handleLogin(username, password);
       if (result.status === 200) {
-        await AsyncStorage.setItem('username', username); // Guarda el nombre de usuario
+        await AsyncStorage.setItem("username", username);
+
         Alert.alert("Success", "Logged in successfully");
-        navigation.replace('Main'); // Navega a la pantalla principal
+        navigation.replace("Main"); // Navega a la pantalla principal
       } else {
         Alert.alert("Error", "Invalid credentials");
       }
@@ -54,24 +55,24 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: "100%",
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#1a1a1a',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1a1a1a",
   },
   title: {
-    color: 'white',
+    color: "white",
     fontSize: 24,
     marginBottom: 16,
   },
   input: {
     height: 50,
-    borderColor: 'white',
+    borderColor: "white",
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 8,
-    color: 'white',
-    width: '80%',
+    color: "white",
+    width: "80%",
   },
 });

@@ -4,6 +4,7 @@ import { FlashList } from '@shopify/flash-list';
 import MovieCard from './moviecard';
 
 const MovieList = ({ navigation, movies }) => {
+
     return (
         <View style={styles.listContainer}>
             {movies.length === 0 ? (
@@ -12,11 +13,13 @@ const MovieList = ({ navigation, movies }) => {
                 <FlashList
                     data={movies}
                     contentContainerStyle={styles.flashListContent}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity onPress={() => navigation.navigate('MovieScreen', { movieId: item.movieId })}>
-                            <MovieCard {...item} />
-                        </TouchableOpacity>
-                    )}
+                    renderItem={({ item }) => {
+                        return (
+                            <TouchableOpacity onPress={() => navigation.navigate('MovieScreen', { movieId: item.movieId })}>
+                                <MovieCard {...item} />
+                            </TouchableOpacity>
+                        );
+                    }}
                     estimatedItemSize={10}
                     refreshControl={
                         <RefreshControl
@@ -30,6 +33,7 @@ const MovieList = ({ navigation, movies }) => {
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     listContainer: {

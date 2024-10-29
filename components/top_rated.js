@@ -2,7 +2,7 @@ import { View, Text, Dimensions, Image, StyleSheet, FlatList } from 'react-nativ
 import React, { useState, useEffect } from 'react';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { fetchTopRatedMovies } from '../Api'; // Importa la función desde api.js
+import { fetchTopRatedMovies } from '../Api'; 
 
 const { width, height } = Dimensions.get('window');
 
@@ -52,12 +52,12 @@ export default function TopRatedMovies() {
 const styles = StyleSheet.create({
   
     container: {
-        marginBottom: 0, // Ajusta según sea necesario
+        marginBottom: 0, 
         padding: 10,
     },
 
     text: {
-    color: 'yellow',
+    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,  

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import { fetchMovieDetails, addToWatchList, addToSeenList, removeMovie } from '../Api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -38,28 +38,26 @@ const trailerUrl = `https://www.youtube.com/watch?v=${movie.trailer}`;
 
 const handleAddToWatchList = async () => {
   try {
-    const userId = await AsyncStorage.getItem('@user_Id'); // Corregido para usar la clave correcta
+    const userId = await AsyncStorage.getItem('@user_Id'); 
     if (!userId) {
-        throw new Error('Usuario no encontrado');
+        throw new Error('User not found');
     }
     await addToWatchList(userId, movieId);
     Alert.alert("Success", `${movie.title} marked as watchlist`);
 } catch (error) {
-    console.error('Error adding to watchlist :', error);
     Alert.alert("Error", "Could not mark as Seen");
 }
 };
 
 const handleAddToSeenList = async () => {
   try {
-      const userId = await AsyncStorage.getItem('@user_Id'); // Corregido para usar la clave correcta
+      const userId = await AsyncStorage.getItem('@user_Id'); 
       if (!userId) {
-          throw new Error('Usuario no encontrado');
+          throw new Error('User not found');
       }
       await addToSeenList(userId, movieId);
       Alert.alert("Success", `${movie.title} marked as Seen`);
   } catch (error) {
-      console.error('Error adding to Seen list:', error);
       Alert.alert("Error", "Could not mark as Seen");
   }
 };
@@ -68,14 +66,13 @@ const handleRemoveMovie = async () => {
   try {
       const userId = await AsyncStorage.getItem('@user_Id');
       if (!userId) {
-          Alert.alert('Error', 'Usuario no encontrado');
+          Alert.alert('Error', 'User not found');
           return;
       }
       await removeMovie(userId, movieId);
-      Alert.alert('Éxito', 'Película eliminada de ambas listas.');
+      Alert.alert('Success', 'Film removed from both lists.');
   } catch (error) {
-      console.error('Error al eliminar la película:', error);
-      Alert.alert('Error', 'No se pudo eliminar la película. Inténtalo de nuevo.');
+      Alert.alert('Error', 'The movie could not be deleted. Try again.');
   }
 };
 
@@ -83,18 +80,18 @@ const handleRemoveMovie = async () => {
 return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.movieContainer}>
-            {/* Imagen de la película */}
+           
             <Image source={{ uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}` }} style={styles.image} />
             
-            {/* Contenedor de título, director y tiempo */}
+           
             <View style={styles.infoContainer}>
                 <Text style={styles.title}>{movie.title}</Text>
                 <Text style={styles.director}>Directed by</Text>
                 <Text style={styles.directorName}>{movie.director}</Text>
                 <Text style={styles.runtime}>{movie.runtime} mins</Text>
 
-                {/* Contenedor de los botones en horizontal */}
-                <View style={styles.horizontalButtonContainer}>
+               
+                  <View style={styles.horizontalButtonContainer}>
                     <TouchableOpacity style={styles.heartButton} onPress={handleAddToWatchList}>
                         <Image source={require('../assets/images/favorite_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.png')} style={styles.heartIcon} />
                     </TouchableOpacity>
@@ -104,15 +101,14 @@ return (
                     <TouchableOpacity style={styles.tickButton} onPress={handleAddToSeenList}>
                         <Image source={require('../assets/images/dobletick.png')} style={styles.tickIcon} />
                     </TouchableOpacity>
-                </View>
+                  </View>
             </View>
         </View>
 
 
-        {/* Descripción/Biografía */}
         <Text style={styles.description}>{movie.overview}</Text>
 
-        {/* Botones de Tráiler e IMDb */}
+      
         <View style={styles.linkButtonContainer}>
             {movie.trailer && (
                 <TouchableOpacity onPress={() => Linking.openURL(trailerUrl)} style={styles.trailerButton}>
@@ -124,7 +120,7 @@ return (
             </TouchableOpacity>
         </View>
 
-        {/*Elenco*/}
+    
         <Text style={styles.castTitle}>Cast</Text>
         <ScrollView horizontal={true} style={styles.castScrollContainer} showsHorizontalScrollIndicator={false}>
             <View style={styles.castContainer}>
@@ -141,8 +137,8 @@ return (
             </View>
         </ScrollView>
 
-        {/* Imágenes de la película */}
-        <Text style={styles.imagesTitle}>Imágenes</Text>
+
+        <Text style={styles.imagesTitle}>Images and Covers</Text>
         <ScrollView horizontal={true} style={styles.imagesScrollContainer} showsHorizontalScrollIndicator={false}>
             <View style={styles.imagesContainer}>
                 {movie.images.map((image, index) => (
@@ -289,8 +285,8 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   actorImage: {
-    width: 100, // Aumenta el ancho
-    height: 100, // Aumenta la altura para que coincida con el ancho
+    width: 100, 
+    height: 100, 
     borderColor: '#9370DB',
     borderWidth: 1,
     borderRadius: 75,

@@ -14,7 +14,7 @@
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
-    "@shopify/flash-list": "1.6.4",
+    "@shopify/flash-list": "^1.6.4",
     "axios": "^1.7.7",
     "core-js": "^3.38.1",
     "expo": "^51.0.38",

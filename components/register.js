@@ -14,7 +14,7 @@ export default function Register() {
       const response = await registerUser(username, email, password);
       if (response.status === 200) {
         Alert.alert('Registro exitoso', '¡Usuario registrado con éxito!');
-        navigation.replace('Login'); // Navega a la pantalla de inicio de sesión
+        navigation.replace('Login'); 
       }
     } catch (error) {
       Alert.alert('Error', 'No se pudo registrar el usuario. Inténtalo de nuevo.');
