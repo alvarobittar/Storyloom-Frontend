@@ -13,11 +13,11 @@ export default function Register() {
     try {
       const response = await registerUser(username, email, password);
       if (response.status === 200) {
-        Alert.alert('Registro exitoso', '¡Usuario registrado con éxito!');
+        Alert.alert('Successful registration', 'User registered successfully!');
         navigation.replace('Login'); 
       }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo registrar el usuario. Inténtalo de nuevo.');
+      Alert.alert('Error', 'Could not register the user. Please try again.');
     }
   };
 
